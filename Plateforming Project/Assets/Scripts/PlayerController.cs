@@ -8,6 +8,9 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D rb;
     public float speed;
     Vector2 movement;
+    //this creates a variable which the enum can set. this sets the default state as .left which 
+    FacingDirection direction = FacingDirection.left;
+
 
     public enum FacingDirection
     {
@@ -27,31 +30,59 @@ public class PlayerController : MonoBehaviour
         //manage the actual movement of the character.
         Vector2 playerInput = new Vector2();
         MovementUpdate(playerInput);
+        GetFacingDirection();
+        
     }
 
     private void MovementUpdate(Vector2 playerInput)
     {
         
         //This line adds force to the rigid body, it uses the movement variable for the vector2 then adds speed 
-        rb.AddForce(movement * speed * Time.deltaTime);
+        rb.AddForce(movement * speed);
 
-        //This allows the player to input using the arrow keysS
+        //This allows the player to input using the arrow keys
         movement = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        
+        print(movement);
 
     }
 
     public bool IsWalking()
     {
-        return false;
+        if (movement.x > 0 || movement.x < 0)
+        {
+            return true;
+        }
+        else 
+        {
+            return false;
+        }
+
     }
     public bool IsGrounded()
     {
-        return false;
+        if (movement.y > 0)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 
     public FacingDirection GetFacingDirection()
     {
-        return FacingDirection.left;
+        //This grabs momentum and depending on whether its negtive or posative it sets the return that it gets as a variable which is then called
+        // to save the state in which the character is facing
+        if (movement.x > 0)
+        {
+            direction = FacingDirection.right;
+        }
+        else if (movement.x < 0)
+        {
+            direction = FacingDirection.left;
+        }
+        return direction;
+
     }
 }
