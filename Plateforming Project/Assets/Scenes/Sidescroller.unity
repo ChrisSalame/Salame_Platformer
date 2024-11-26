@@ -1700,8 +1700,9 @@ MonoBehaviour:
   gravity: 0.5
   initialJumpVel: 0.5
   initialMult: 2
-  gravityMult: 0.5
+  gravityMult: -0.5
   currentVel: 0
+  isGroundedBool: 0
   timeToReachMaxSpeed: 1.25
   maxSpeed: 25
   timeToDecelerate: 0.75

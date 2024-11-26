@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
     public float initialMult;
     public float gravityMult;
     public float currentVel;
-    
+    public float isGroundedBool;
 
 
     //I grabbed this from the codeshare
@@ -33,7 +33,6 @@ public class PlayerController : MonoBehaviour
     public float timeToDecelerate;
     private float acceleration;
     private float deceleration;
-
 
     public enum FacingDirection
     {
@@ -97,13 +96,16 @@ public class PlayerController : MonoBehaviour
         }
         else if (!IsGrounded()) 
         {
-            currentVel = currentVel + gravity * Time.deltaTime;
-            //transform.Translate(new Vector2(0, transform.position.y + currentVel * Time.deltaTime + 0.5f * gravity * Time.deltaTime * Time.deltaTime));
+            isGroundedBool = 1;
         }
         else if (IsGrounded()) 
         {
+            isGroundedBool = 0;
             currentVel = 0;
         }
+
+        currentVel = currentVel + gravity * isGroundedBool * Time.deltaTime;
+        transform.position = new Vector2(transform.position.x, transform.position.y + currentVel * Time.deltaTime + 0.5f * gravity * isGroundedBool * Time.deltaTime * Time.deltaTime);
 
 
 
