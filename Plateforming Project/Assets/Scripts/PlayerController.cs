@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.PlasticSCM.Editor.WebApi;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ public class PlayerController : MonoBehaviour
 
     public float accelerationTime;
     float accelaration;
-    float velocity;
+    float initialVelocity;
 
     Vector2 movement;
 
@@ -19,8 +20,11 @@ public class PlayerController : MonoBehaviour
     public float apexHeight;
     public float apexTime;
     public float gravity;
-    float currentTime;
-    Vector2 position;
+    public float initialJumpVel;
+    public float initialMult;
+    public float gravityMult;
+    public float currentVel;
+    
 
 
     //I grabbed this from the codeshare
@@ -29,7 +33,7 @@ public class PlayerController : MonoBehaviour
     public float timeToDecelerate;
     private float acceleration;
     private float deceleration;
-    public float jumpPower;
+
 
     public enum FacingDirection
     {
@@ -43,6 +47,10 @@ public class PlayerController : MonoBehaviour
 
         acceleration = maxSpeed / timeToReachMaxSpeed;
         deceleration = maxSpeed / timeToDecelerate;
+
+
+        gravity = gravityMult * apexHeight / Mathf.Pow(apexTime, 2);
+        initialJumpVel = initialMult * apexHeight / apexTime;
 
     }
 
@@ -78,16 +86,31 @@ public class PlayerController : MonoBehaviour
             currentVelocity -= deceleration * Vector2.right * Time.deltaTime;
         }
 
+
         if (Input.GetKey(KeyCode.Space) && IsGrounded())
         {
-            rb.gravityScale = 0;
-            currentVelocity += Vector2.up * jumpPower;
+            //rb.gravityScale = 0;
+            //currentVelocity += Vector2.up * jumpPower;
+
+            currentVel = initialJumpVel;
+
+        }
+        else if (!IsGrounded()) 
+        {
+            currentVel = currentVel + gravity * Time.deltaTime;
+            //transform.Translate(new Vector2(0, transform.position.y + currentVel * Time.deltaTime + 0.5f * gravity * Time.deltaTime * Time.deltaTime));
+        }
+        else if (IsGrounded()) 
+        {
+            currentVel = 0;
         }
 
-        if (Input.GetKeyUp(KeyCode.Space) && !IsGrounded())
+
+
+        /*if (Input.GetKeyUp(KeyCode.Space) && !IsGrounded())
         {
             rb.gravityScale = gravity;
-        }
+        }*/
 
         rb.velocity = currentVelocity;
     }
