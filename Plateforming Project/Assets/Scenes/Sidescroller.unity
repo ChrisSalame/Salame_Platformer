@@ -1695,7 +1695,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   accelerationTime: 0
-  apexHeight: 0
+  apexHeight: 5
   apexTime: 0
   gravity: 1
   timeToReachMaxSpeed: 3
