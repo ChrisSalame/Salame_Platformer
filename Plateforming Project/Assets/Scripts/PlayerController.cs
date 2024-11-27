@@ -22,9 +22,15 @@ public class PlayerController : MonoBehaviour
     float initialJumpVel;
     float gravity;
 
+
     bool inAir;
     public float terminalSpeed;
 
+
+    public int health;
+    bool hasJumped = false;
+
+    //public string ;
 
 
 
@@ -43,14 +49,23 @@ public class PlayerController : MonoBehaviour
         left, right
     }
 
+    public enum CharacterState
+    {
+        idle, walk, jump, die
+    }
+
+    public CharacterState currentCharacterState = CharacterState.idle;
+    public CharacterState previousCharacterState = CharacterState.idle;
+
+
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
 
-  /*      acceleration = maxSpeed / timeToReachMaxSpeed;
-        deceleration = maxSpeed / timeToDecelerate;
-*/
+        /*      acceleration = maxSpeed / timeToReachMaxSpeed;
+              deceleration = maxSpeed / timeToDecelerate;
+      */
 
 
         gravity = gravityMult * apexHeight / Mathf.Pow(apexTime, 2);
@@ -65,12 +80,70 @@ public class PlayerController : MonoBehaviour
         MovementUpdate(playerInput);
 
 
+        if (IsGrounded() && Input.GetKeyDown(KeyCode.UpArrow)) 
+        {
+            hasJumped = true;
+        }
 
 
-        //Debug.Log(IsGrounded());
 
+        switch (currentCharacterState)
+        {
+            case CharacterState.die:
+
+                break;
+
+
+
+            case CharacterState.jump:
+
+                if (IsGrounded())
+                {
+                    //We know we need to make a transition because we're not grounded anymore
+                    if (IsWalking())
+                    {
+                        currentCharacterState = CharacterState.walk;
+                    }
+                    else
+                    {
+                        currentCharacterState = CharacterState.idle;
+                    }
+                }
+                
+                break;
+
+
+            case CharacterState.walk:
+                if (!IsWalking())
+                {
+                    currentCharacterState = CharacterState.idle;
+                }
+                //Are we jumping?
+                if (!IsGrounded())
+                {
+                    currentCharacterState = CharacterState.jump;
+                }
+                break;
+
+
+            case CharacterState.idle:
+                //Are we walking?
+                if (IsWalking())
+                {
+                    currentCharacterState = CharacterState.walk;
+                }
+                //Are we jumping?
+                if (!IsGrounded())
+                {
+                    currentCharacterState = CharacterState.jump;
+                }
+
+                break;
+        }
 
     }
+
+
     private void FixedUpdate()
     {
         if (inAir)
@@ -118,18 +191,19 @@ public class PlayerController : MonoBehaviour
             //currentVelocity += Vector2.up * jumpPower;
 
             rb.AddForce(new Vector2(0, initialJumpVel), ForceMode2D.Impulse);
+            hasJumped = true;
 
         }
 
 
-      /*  if (IsGrounded())
-        {
-            inAir = false;
-        }
-        else if (!IsGrounded())
-        {
-            inAir = true;
-        }*/
+        /*  if (IsGrounded())
+          {
+              inAir = false;
+          }
+          else if (!IsGrounded())
+          {
+              inAir = true;
+          }*/
 
 
 
@@ -147,6 +221,8 @@ public class PlayerController : MonoBehaviour
             inAir = false;
 
         }
+
+
         else if (!IsGrounded())
 
         {
@@ -161,17 +237,7 @@ public class PlayerController : MonoBehaviour
         }
 
 
-
-
-
-
-
-
-
-
-
-
-       //Debug.Log(rb.velocity.y);
+        //Debug.Log(rb.velocity.y);
 
 
 
@@ -236,11 +302,11 @@ public class PlayerController : MonoBehaviour
         //Sit sets the return that it gets as a variable which is then called
         // to save the state in which the character is facing
 
-        if (movement.x > 0)
+        if (rb.velocity.x > 0)
         {
             direction = FacingDirection.right;
         }
-        else if (movement.x < 0)
+        else if (rb.velocity.x < 0)
         {
             direction = FacingDirection.left;
         }
@@ -248,4 +314,13 @@ public class PlayerController : MonoBehaviour
         return direction;
 
     }
+
+
+    public bool IsDead()
+    {
+        return health <= 0;
+
+    }
+
+
 }
