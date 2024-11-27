@@ -75,6 +75,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        previousCharacterState = currentCharacterState;
         //this is from the codeshare
         Vector2 playerInput = new Vector2();
         MovementUpdate(playerInput);
@@ -84,6 +85,8 @@ public class PlayerController : MonoBehaviour
         {
             hasJumped = true;
         }
+
+
 
 
 
@@ -139,6 +142,11 @@ public class PlayerController : MonoBehaviour
                 }
 
                 break;
+        }
+
+        if (IsDead()) 
+        {
+            currentCharacterState = CharacterState.die;
         }
 
     }
@@ -237,7 +245,8 @@ public class PlayerController : MonoBehaviour
         }
 
 
-        //Debug.Log(rb.velocity.y);
+        Debug.Log(rb.velocity.x);
+        Debug.Log(IsWalking());
 
 
 
@@ -265,7 +274,7 @@ public class PlayerController : MonoBehaviour
 
     public bool IsWalking()
     {
-        if (movement.x > 0 || movement.x < 0)
+        if (rb.velocity.x > 0.5 || rb.velocity.x < 0.5)
         {
             return true;
         }
@@ -322,5 +331,9 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    public void onDeathAnimationComplete() 
+    {
+        gameObject.SetActive(false);
+    }
 
 }

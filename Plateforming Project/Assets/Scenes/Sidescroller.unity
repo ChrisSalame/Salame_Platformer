@@ -1702,8 +1702,8 @@ MonoBehaviour:
   terminalSpeed: -9
   health: 10
   coyoteTime: 0.5
-  currentcharacterState: 0
-  previouscharacterState: 0
+  currentCharacterState: 0
+  previousCharacterState: 0
 --- !u!4 &1433354315
 Transform:
   m_ObjectHideFlags: 0
