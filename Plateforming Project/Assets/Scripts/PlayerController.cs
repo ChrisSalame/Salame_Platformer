@@ -274,7 +274,7 @@ public class PlayerController : MonoBehaviour
 
     public bool IsWalking()
     {
-        if (rb.velocity.x > 0.5 || rb.velocity.x < 0.5)
+        if (rb.velocity.x > 0.75 || rb.velocity.x < 0.75)
         {
             return true;
         }
