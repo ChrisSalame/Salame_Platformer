@@ -195,48 +195,49 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && !inAir)
         {
-            //rb.gravityScale = 0;
-            //currentVelocity += Vector2.up * jumpPower;
-
             rb.AddForce(new Vector2(0, initialJumpVel), ForceMode2D.Impulse);
             hasJumped = true;
-
         }
+
+
+
+
+        if (Input.GetKeyDown(KeyCode.Space) && inAir && IsOnWall())
+        {
+            rb.AddForce(new Vector2(0, initialJumpVel), ForceMode2D.Impulse);
+        }
+
+
 
 
         if (direction == FacingDirection.right)
         {
-            if (Input.GetKeyDown(KeyCode.F) && inAir)
+            if (Input.GetKeyDown(KeyCode.E) && inAir)
             {
-                //rb.gravityScale = 0;
-                //currentVelocity += Vector2.up * jumpPower;
-
                 rb.AddForce(new Vector2(initialJumpVel / 2, 0), ForceMode2D.Impulse);
-
             }
         }
 
         else if (direction == FacingDirection.left)
         {
-            if (Input.GetKeyDown(KeyCode.F) && inAir)
+            if (Input.GetKeyDown(KeyCode.E) && inAir)
             {
-                //rb.gravityScale = 0;
-                //currentVelocity += Vector2.up * jumpPower;
-
                 rb.AddForce(new Vector2(-initialJumpVel / 2, 0), ForceMode2D.Impulse);
-
             }
         }
 
-        /*  if (IsGrounded())
-          {
-              inAir = false;
-          }
-          else if (!IsGrounded())
-          {
-              inAir = true;
-          }*/
 
+        if (Input.GetKey(KeyCode.F) && inAir)
+        {
+            gravity = 0.25f;
+
+        }
+
+        if (Input.GetKeyUp(KeyCode.F))
+        {
+            gravity = gravityMult * apexHeight / Mathf.Pow(apexTime, 2);
+
+        }
 
 
         if (rb.velocity.y <= terminalSpeed)
@@ -315,7 +316,11 @@ public class PlayerController : MonoBehaviour
         RaycastHit2D boxcheck;
         boxcheck = Physics2D.BoxCast(gameObject.transform.position, new Vector2(1, 1), 0, new Vector2(0, -1), 0.25f, LayerMask.GetMask("ground"));
 
-        //Debug.Log(boxcheck);
+        RaycastHit2D boxcheckleft;
+        boxcheckleft = Physics2D.BoxCast(gameObject.transform.position, new Vector2(1, 1), 0, new Vector2(-0.25f,0), 0.25f, LayerMask.GetMask("ground"));
+
+        RaycastHit2D boxcheckright;
+        boxcheckright = Physics2D.BoxCast(gameObject.transform.position, new Vector2(1, 1), 0, new Vector2(0.25f, 0), 0.25f, LayerMask.GetMask("ground"));
 
         if (boxcheck.collider == true)
         {
@@ -326,8 +331,42 @@ public class PlayerController : MonoBehaviour
         {
             return false;
         }
+    }
+
+
+    public bool IsOnWall()
+    {
+        RaycastHit2D boxcheckleft;
+        boxcheckleft = Physics2D.BoxCast(gameObject.transform.position, new Vector2(1, 1), 0, new Vector2(-0.25f, 0), 0.25f, LayerMask.GetMask("ground"));
+
+        RaycastHit2D boxcheckright;
+        boxcheckright = Physics2D.BoxCast(gameObject.transform.position, new Vector2(1, 1), 0, new Vector2(0.25f, 0), 0.25f, LayerMask.GetMask("ground"));
+
+        if (boxcheckleft.collider == true)
+        {
+            return true;
+
+        }
+        else if (boxcheckleft.collider == true)
+        {
+            return false;
+        }
+
+        if (boxcheckright.collider == true)
+        {
+            return true;
+
+        }
+        else
+        {
+            return false;
+        }
+
+
+
 
     }
+
 
     public FacingDirection GetFacingDirection()
     {
