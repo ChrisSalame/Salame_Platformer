@@ -204,6 +204,30 @@ public class PlayerController : MonoBehaviour
         }
 
 
+        if (direction == FacingDirection.right)
+        {
+            if (Input.GetKeyDown(KeyCode.F) && inAir)
+            {
+                //rb.gravityScale = 0;
+                //currentVelocity += Vector2.up * jumpPower;
+
+                rb.AddForce(new Vector2(initialJumpVel / 2, 0), ForceMode2D.Impulse);
+
+            }
+        }
+
+        else if (direction == FacingDirection.left)
+        {
+            if (Input.GetKeyDown(KeyCode.F) && inAir)
+            {
+                //rb.gravityScale = 0;
+                //currentVelocity += Vector2.up * jumpPower;
+
+                rb.AddForce(new Vector2(-initialJumpVel / 2, 0), ForceMode2D.Impulse);
+
+            }
+        }
+
         /*  if (IsGrounded())
           {
               inAir = false;
